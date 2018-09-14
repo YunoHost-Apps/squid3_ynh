@@ -121,4 +121,4 @@ Save and restart borwser.
 
 If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/squid3_ynh/issues"
 
-ynh_send_readme_to_admin --app_message="$message" --recipients="root"
+ynh_send_readme_to_admin "$message"
