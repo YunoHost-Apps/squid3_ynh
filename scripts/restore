@@ -49,12 +49,12 @@ yunohost firewall allow --no-upnp TCP $port
 #=================================================
 ynh_secure_remove "/etc/squid3/squid.conf"	
 ynh_restore_file  "/etc/squid3/squid.conf"
-ynh_system_reload --service_name=squid --action=restart
+service squid3 restart
 #=================================================
 # ADVERTISE SERVICE IN ADMIN PANEL
 #=================================================
 
-yunohost service add squid  --log "/var/log/squid/access.log"
+yunohost service add squid3  --log "/var/log/squid/access.log"
 
 
 #=================================================

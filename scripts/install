@@ -111,14 +111,14 @@ ynh_store_file_checksum "/etc/squid3/squid.conf"
 ###		- Remove the section "REMOVE SERVICE FROM ADMIN PANEL" in the remove script
 ###		- As well as the section ADVERTISE SERVICE IN ADMIN PANEL" in the restore script
 
-yunohost service add squid  --log "/var/log/squid/access.log"
+yunohost service add squid3 --log "/var/log/squid/access.log"
 
 
 #=================================================
 # RESTART SQUID'S SERVICE
 #=================================================
 
-ynh_system_reload --service_name=squid3 --action=restart
+service squid3 restart
 
 
 #=================================================
