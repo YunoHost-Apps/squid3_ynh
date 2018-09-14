@@ -1,6 +1,6 @@
 {
     "name": "squid3",
-    "id": "squid",
+    "id": "squid3",
     "packaging_format": 1,
     "description": {
         "en": "Squid 3 package for Yunohost"

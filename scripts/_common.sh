@@ -56,3 +56,4 @@ $app_message
 ---
 Automatic diagnosis data from YunoHost
 $(yunohost tools diagnosis | grep -B 100 "services:" | sed '/services:/d')"
+}

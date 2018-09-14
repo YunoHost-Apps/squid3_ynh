@@ -56,15 +56,12 @@ ynh_app_setting_set $app port $port
 
 ynh_install_app_dependencies squid3 mailutils
 
-
 #=================================================
 # MODIFY A CONFIG FILE
 #=================================================
 
 ### `ynh_replace_string` is used to replace a string in a file.
 ### (It's compatible with sed regular expressions syntax)
-
-ynh_replace_string "__ADMIN_PASS__" "$admin_pass_yuno" "../conf/squid.conf"
 ynh_replace_string "__PORT__"       "$port"            "../conf/squid.conf"
 cp -f "../conf/squid.conf" "/etc/squid3/."
 #=================================================
