@@ -86,7 +86,7 @@ ynh_install_app_dependencies squid3
 
 ynh_replace_string "__ADMIN_PASS__" "$admin_pass_yuno" "../conf/squid.conf"
 ynh_replace_string "__PORT__"       "$port"            "../conf/squid.conf"
-cp -f "../conf/squid.conf" "/etc/squid/squid.conf"
+cp -f "../conf/squid.conf" "/etc/squid/."
 #=================================================
 # STORE THE CONFIG FILE CHECKSUM
 #=================================================
