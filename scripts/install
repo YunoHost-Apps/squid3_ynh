@@ -86,7 +86,7 @@ ynh_install_app_dependencies squid3
 
 ynh_replace_string "__ADMIN_PASS__" "$admin_pass_yuno" "../conf/squid.conf"
 ynh_replace_string "__PORT__"       "$port"            "../conf/squid.conf"
-cp -f "../conf/squid.conf" "/etc/squid/."
+cp -f "../conf/squid.conf" "/etc/squid3/."
 #=================================================
 # STORE THE CONFIG FILE CHECKSUM
 #=================================================
@@ -96,7 +96,7 @@ cp -f "../conf/squid.conf" "/etc/squid/."
 ### you can make a backup of this file before modifying it again if the admin had modified it.
 
 # Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum "/etc/squid/squid.conf"
+ynh_store_file_checksum "/etc/squid3/squid.conf"
 
 
 #=================================================
@@ -118,14 +118,14 @@ yunohost service add squid  --log "/var/log/squid/access.log"
 # RESTART SQUID'S SERVICE
 #=================================================
 
-ynh_system_reload --service_name=squid --action=restart
+ynh_system_reload --service_name=squid3 --action=restart
 
 
 #=================================================
 # SEND A README FOR THE ADMIN
 #=================================================
 
-message="You can find a config file at /etc/squid/squid.conf
+message="You can find a config file at /etc/squid3/squid.conf
 Squid 3 will work with your registered users. Just put the username and password when asked.
 
 To configure on Firefox go to preferences->general->network proxy->manual proxy configuration.

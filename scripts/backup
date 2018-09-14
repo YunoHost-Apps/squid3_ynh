@@ -31,4 +31,4 @@ app=$YNH_APP_INSTANCE_NAME
 # BACKUP OF THE CONFIG OF SQUID3
 #=================================================
 
-ynh_backup "/etc/squid/squid.conf"
+ynh_backup "/etc/squid3/squid.conf"

@@ -47,8 +47,8 @@ yunohost firewall allow --no-upnp TCP $port
 #=================================================
 # RESTORE INOTIFY'S CONFIG
 #=================================================
-ynh_secure_remove "/etc/squid/squid.conf"	
-ynh_restore_file  "/etc/squid/squid.conf"
+ynh_secure_remove "/etc/squid3/squid.conf"	
+ynh_restore_file  "/etc/squid3/squid.conf"
 ynh_system_reload --service_name=squid --action=restart
 #=================================================
 # ADVERTISE SERVICE IN ADMIN PANEL
@@ -61,7 +61,7 @@ yunohost service add squid  --log "/var/log/squid/access.log"
 # SEND A README FOR THE ADMIN
 #=================================================
 
-message="You can find a config file at /etc/squid/squid.conf
+message="You can find a config file at /etc/squid3/squid.conf
 Squid 3 will work with your registered users. Just put the username and password when asked.
 
 To configure on Firefox go to preferences->general->network proxy->manual proxy configuration.
