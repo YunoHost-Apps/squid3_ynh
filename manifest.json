@@ -18,18 +18,6 @@
     "multi_instance": false,
     "services": [],
     "arguments": {
-        "install" : [
-            {
-                "name": "password",
-                "type": "password",
-                "ask": {
-                    "en": "Your Yunohost admin password (The password you use for the web-admin for Yunohost) "
-                },
-                "help": {
-                    "en": "The admin password is required to give all registered user access to Squid"
-                },
-                "example": "Choose a password"
-            }
-        ]
+        "install" : []
     }
 }

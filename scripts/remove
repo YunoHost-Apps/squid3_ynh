@@ -32,6 +32,7 @@ fi
 
 # Remove metapackage and its dependencies
 apt-get -y purge squid3
+yunohost app ssowatconf
 
 #=================================================
 # CLOSE A PORT

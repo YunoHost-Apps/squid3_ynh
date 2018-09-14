@@ -34,7 +34,7 @@ port=$(ynh_app_setting_get $app port)
 # REINSTALL DEPENDENCIES
 #=================================================
 
-ynh_install_app_dependencies squid3
+ynh_install_app_dependencies squid3 mailutils
 
 #=================================================
 # SPECIFIC RESTORE
@@ -50,11 +50,12 @@ yunohost firewall allow --no-upnp TCP $port
 ynh_secure_remove "/etc/squid3/squid.conf"	
 ynh_restore_file  "/etc/squid3/squid.conf"
 service squid3 restart
+yunohost app ssowatconf
 #=================================================
 # ADVERTISE SERVICE IN ADMIN PANEL
 #=================================================
 
-yunohost service add squid3  --log "/var/log/squid/access.log"
+yunohost service add squid3  --log "/var/log/squid3/access.log"
 
 
 #=================================================
