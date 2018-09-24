@@ -3,7 +3,8 @@
     "id": "squid3",
     "packaging_format": 1,
     "description": {
-        "en": "Squid 3 package for Yunohost"
+        "en": "Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more.",
+        "fr": "Squid est un proxy cache pour le web, compatible HTTP, HTTPS, FTP, et plus encore."
     },
     "version": "1.0~ynh1",
     "url": "http://www.squid-cache.org/",
