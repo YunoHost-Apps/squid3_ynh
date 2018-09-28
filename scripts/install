@@ -66,19 +66,19 @@ ynh_install_app_dependencies squid3 mailutils
 # See is squid3 folder is there
 if [ -d "/etc/squid3" ]; then 
 		squid="squid3"
-		ynh_replace_string "__PORT__"    "$port"   "../conf/squid.conf"
-		cp -f "../conf/squid.conf" "/etc/squid3/."
+
 # If squid3 folder is not found look for squid folder
 elif [ -d "/etc/squid" ]; then
 		squid="squid"
-		ynh_replace_string "__PORT__"    "$port"   "../conf/squid.conf"
-		cp -f "../conf/squid.conf" "/etc/squid/."
+		
 # If both folders are not found then call ynh_die
 else
 		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually by apt-get install squid3"
   
 fi
-
+ynh_replace_string "__PORT__"    "$port"   "../conf/squid.conf"
+ynh_replace_string "__SQUID__"   "$squid"   "../conf/squid.conf"
+cp -f "../conf/squid.conf" "/etc/$squid/."
 # Save squid folder
 ynh_app_setting_set $app squid_folder $squid
 
