@@ -53,8 +53,25 @@ yunohost firewall allow --no-upnp TCP $port
 
 ### `ynh_replace_string` is used to replace a string in a file.
 ### (It's compatible with sed regular expressions syntax)
-ynh_replace_string "__PORT__"       "$port"            "../conf/squid.conf"
-cp -f "../conf/squid.conf" "/etc/squid3/squid.conf"
+
+# See is squid3 folder is there
+if [ -d "/etc/squid3" ]; then 
+		squid="squid3"
+		ynh_replace_string "__PORT__"    "$port"   "../conf/squid.conf"
+		cp -f "../conf/squid.conf" "/etc/squid3/."
+# If squid3 folder is not found look for squid folder
+elif [ -d "/etc/squid" ]; then
+		squid="squid"
+		ynh_replace_string "__PORT__"    "$port"   "../conf/squid.conf"
+		cp -f "../conf/squid.conf" "/etc/squid/."
+# If both folders are not found then call ynh_die
+else
+		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually by apt-get install squid3"
+  
+fi
+
+# Save squid folder
+ynh_app_setting_set $app squid_folder $squid
 
 
 #=================================================
@@ -63,9 +80,9 @@ cp -f "../conf/squid.conf" "/etc/squid3/squid.conf"
 
 ### Verify the checksum of a file, stored by `ynh_store_file_checksum` in the install script.
 ### And create a backup of this file if the checksum is different. So the file will be backed up if the admin had modified it.
-ynh_backup_if_checksum_is_different "/etc/squid3/squid.conf"
+ynh_backup_if_checksum_is_different "/etc/$squid/squid.conf"
 # Recalculate and store the checksum of the file for the next upgrade.
-ynh_store_file_checksum "/etc/squid3/squid.conf"
+ynh_store_file_checksum "/etc/$squid/squid.conf"
 
 #=================================================
 # ADVERTISE SERVICE IN ADMIN PANEL
@@ -79,12 +96,12 @@ ynh_store_file_checksum "/etc/squid3/squid.conf"
 ###		- Remove the section "REMOVE SERVICE FROM ADMIN PANEL" in the remove script
 ###		- As well as the section ADVERTISE SERVICE IN ADMIN PANEL" in the restore script
 
-yunohost service add squid3 --log "/var/log/squid3/access.log"
+yunohost service add squid3 --log "/var/log/$squid/access.log"
 
 #=================================================
 # RESTART SQUID'S SERVICE and SSOWATCONF
 #=================================================
 
-service squid3 restart
+service $squid restart
 yunohost app ssowatconf
 
