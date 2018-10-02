@@ -45,24 +45,46 @@ ynh_install_app_dependencies squid3 mailutils
 yunohost firewall allow --no-upnp TCP $port
 
 #=================================================
+# MODIFY A CONFIG FILE
+#=================================================
+
+### `ynh_replace_string` is used to replace a string in a file.
+### (It's compatible with sed regular expressions syntax)
+
+# See is squid3 folder is there
+if [ -d "/etc/squid3" ]; then 
+		squid="squid3"
+		# If squid3 folder is not found look for squid folder
+elif [ -d "/etc/squid" ]; then
+		squid="squid"
+# If both folders are not found then call ynh_die
+else
+		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually by apt-get install squid3"
+  
+fi
+
+# Save squid folder
+ynh_app_setting_set $app squid_folder $squid
+
+#=================================================
 # RESTORE INOTIFY'S CONFIG
 #=================================================
-ynh_secure_remove "/etc/squid3/squid.conf"	
-ynh_restore_file  "/etc/squid3/squid.conf"
-service squid3 restart
+ynh_secure_remove "/etc/$squid/squid.conf"	
+ynh_restore_file  "/etc/$squid/squid.conf"
+service $squid restart
 yunohost app ssowatconf
 #=================================================
 # ADVERTISE SERVICE IN ADMIN PANEL
 #=================================================
 
-yunohost service add squid3  --log "/var/log/squid3/access.log"
+yunohost service add squid3  --log "/var/log/$squid/access.log"
 
 
 #=================================================
 # SEND A README FOR THE ADMIN
 #=================================================
 
-message="You can find a config file at /etc/squid3/squid.conf
+message="You can find a config file at /etc/$squid/squid.conf
 Squid 3 will work with your registered users. Just put the username and password when asked.
 
 To configure on Firefox go to preferences->general->network proxy->manual proxy configuration.

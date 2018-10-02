@@ -15,14 +15,14 @@ source /usr/share/yunohost/helpers
 
 app=$YNH_APP_INSTANCE_NAME
 port=$(ynh_app_setting_get $app port)
-
+squid=$(ynh_app_setting_get $app squid_folder)
 
 
 
 # Remove a service from the admin panel, added by `yunohost service add`
 if yunohost service status | grep -q $app
 then
-	echo "Remove $app service"
+	echo "Remove $squid service"
 	yunohost service remove $app
 fi
 
