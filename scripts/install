@@ -40,7 +40,7 @@ app=$YNH_APP_INSTANCE_NAME
 ###		- Remove the section "CLOSE A PORT" in the remove script
 
 # Find a free port
-port=$(ynh_find_port $sqid_port)
+port=$(ynh_find_port $squid_port)
 # Open this port
 yunohost firewall allow --no-upnp TCP $port 2>&1
 ynh_app_setting_set $app port $port
