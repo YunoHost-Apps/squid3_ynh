@@ -19,6 +19,16 @@
     "multi_instance": false,
     "services": [],
     "arguments": {
-        "install" : []
+        "install" : [
+			    "name": "squid_port",
+			    "type": "port",
+                "ask": {
+                    "en": "Choose a port for your Squid 3.",
+                    "fr": "Entrez un port pour votre Squid 3."
+                },
+                "example": "8095",
+                "default": "8095"
+			}
+        ]
     }
 }
