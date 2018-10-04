@@ -20,6 +20,7 @@
     "services": [],
     "arguments": {
         "install" : [
+                {
 			    "name": "squid_port",
 			    "type": "port",
                 "ask": {
