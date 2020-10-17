@@ -28,7 +28,7 @@ Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more. It r
 1. Under **No Proxy for** enter this **localhost, 127.0.0.1**.
 1. **Save and restart** the Firefox.
 
-**If you try Squid 3 in any other way please write the instruction in the issue so that I can add it to the readme**
+If you try Squid 3 in any other way please write the instruction in the issue so that I can add it to the readme
 
 ## Special Thanks
 Thanks to **Fred** to write the instruction to configure Squid for Yunohost. French: https://memo-linux.com/installer-squid3-sur-un-serveur-yunohost/

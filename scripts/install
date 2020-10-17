@@ -165,7 +165,7 @@ ynh_script_progression --message="Starting a systemd service..."
 ###		- And the section "STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the change_url script
 
 # Start a systemd service
-ynh_systemd_action --service_name=$squid --action="start" --log_path="/var/log/$squid/access.log"
+ynh_systemd_action --service_name=$squid --action="restart" --log_path="/var/log/$squid/access.log"
 
 yunohost app ssowatconf
 
@@ -181,13 +181,13 @@ To configure on Firefox go to preferences->general->network proxy->manual proxy 
 Enter these value in the below feilds.
 ---------------------------------------------------------------------
 | Http proxy: Your any registered domain name or ip eg domain.tld
-|--------------------------------------------------------------------
+|
 |port: $port
-|--------------------------------------------------------------------
+|
 |Tick mark use this proxy server for all protocols
-|--------------------------------------------------------------------
+|
 |No proxy for: localhost, 127.0.0.1
-|--------------------------------------------------------------------
+|
 |Save and restart borwser.
 ---------------------------------------------------------------------
 If you are facing any issues or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/squid3_ynh/issues" > mail_to_send

@@ -92,15 +92,21 @@ To configure on Firefox go to preferences->general->network proxy->manual proxy 
 Enter these value in the below feilds.
 ---------------------------------------------------------------------
 | Http proxy: Your any registered domain name or ip eg domain.tld
-|--------------------------------------------------------------------
+|
 |port: $port
-|--------------------------------------------------------------------
+|
 |Tick mark use this proxy server for all protocols
-|--------------------------------------------------------------------
+|
 |No proxy for: localhost, 127.0.0.1
-|--------------------------------------------------------------------
+|
 |Save and restart borwser.
 ---------------------------------------------------------------------
 If you are facing any issues or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/squid3_ynh/issues" > mail_to_send
 
 ynh_send_readme_to_admin --app_message="mail_to_send" --type="install"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Restoration completed for $app" --time --last
