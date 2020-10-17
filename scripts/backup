@@ -31,4 +31,10 @@ squid=$(ynh_app_setting_get $app squid_folder)
 # BACKUP OF THE CONFIG OF SQUID3
 #=================================================
 
-ynh_backup "/etc/$squid/squid.conf"
+ynh_backup --src_path="/etc/$squid/squid.conf"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_print_info --message="Backup script completed for $app. (YunoHost will then actually copy those files to the archive)."

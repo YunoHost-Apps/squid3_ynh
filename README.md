@@ -1,8 +1,7 @@
 # Squid3 Proxy for Yunohost with LDAP
 
-[![Integration level](https://dash.yunohost.org/integration/squid3.svg)](https://ci-apps.yunohost.org/jenkins/job/squid3%20%28Community%29/lastBuild/consoleFull)  
-[![Install squid3 with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=peertube)<br><br>
-=======
+[![Integration level](https://dash.yunohost.org/integration/squid3.svg)](https://dash.yunohost.org/appci/app/squid3) ![](https://ci-apps.yunohost.org/ci/badges/squid3.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/squid3.maintain.svg)
+[![Install Squid3 with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=squid3)
 
 ## Interesting links
 
@@ -15,12 +14,10 @@ Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more. It r
 
 ## Instruction
 
-1. The app will not ask anything while installation.
-1. There is **no update** script.
 1. The app can not be **multi-instance**(can't be installed many times on same server).
-1. **LDAP** is there(Registered users can use there login username and password to browse internet through the proxy)
-1. **Port number** to be used will be sent to the **admin mail** of the Yunohost server.
-1. The username and password is **asked twice** first time you start the browser(I have no idea why this happens).
+2. **LDAP** is there(Registered users can use there login username and password to browser internet through the proxy)
+3. **Port number** used by the proxy will be sent to the **admin mail** of the Yunohost server.
+4. The username and password is **asked twice** first time you start the browser(I have no idea why this happens).
 
 ## Configure Squid3 for Firefox
 
@@ -35,3 +32,8 @@ Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more. It r
 
 ## Special Thanks
 Thanks to **Fred** to write the instruction to configure Squid for Yunohost. French: https://memo-linux.com/installer-squid3-sur-un-serveur-yunohost/
+
+#### Supported architectures
+
+* x86-64 - [![Build Status](https://ci-apps.yunohost.org/ci/logs/squid3%20%28Apps%29.svg)](https://ci-apps.yunohost.org/ci/apps/squid3/)
+* ARMv8-A - [![Build Status](https://ci-apps-arm.yunohost.org/ci/logs/squid3%20%28Apps%29.svg)](https://ci-apps-arm.yunohost.org/ci/apps/squid3/)

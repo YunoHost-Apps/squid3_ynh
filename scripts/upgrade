@@ -16,11 +16,22 @@ source /usr/share/yunohost/helpers
 app=$YNH_APP_INSTANCE_NAME
 port=$(ynh_app_setting_get $app port)
 
+#=================================================
+# CHECK VERSION
+#=================================================
 
+### This helper will compare the version of the currently installed app and the version of the upstream package.
+### $upgrade_type can have 2 different values
+### - UPGRADE_APP if the upstream app version has changed
+### - UPGRADE_PACKAGE if only the YunoHost package has changed
+### ynh_check_app_version_changed will stop the upgrade if the app is up to date.
+### UPGRADE_APP should be used to upgrade the core app only if there's an upgrade to do.
+upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
+ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --time --weight=1
 
 # Backup the current version of the app
 ynh_backup_before_upgrade
@@ -32,20 +43,33 @@ ynh_clean_setup () {
 ynh_abort_if_errors
 
 #=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+if [ "$upgrade_type" == "UPGRADE_APP" ]
+then
+	ynh_script_progression --message="Upgrading source files..." --time --weight=1
+
+	# Download, check integrity, uncompress and patch the source from app.src
+	ynh_setup_source --dest_dir="$final_path"
+fi
+
+#=================================================
 # SPECIFIC RESTORATION
 #=================================================
-# REINSTALL DEPENDENCIES
+# UPGRADE DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Upgrading dependencies..." --time --weight=1
 
-ynh_install_app_dependencies squid3 mailutils
+ynh_install_app_dependencies $pkg_dependencies
 
-#=================================================
-# SPECIFIC RESTORE
-#=================================================
-# OPEN PORTS
-#=================================================
 
-yunohost firewall allow --no-upnp TCP $port
+# Optional: Expose this port publicly
+# (N.B. : you only need to do this if the app actually needs to expose the port publicly.
+# If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
+
+# Open the port
+ ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
 
 #=================================================
 # MODIFY A CONFIG FILE
@@ -55,9 +79,9 @@ yunohost firewall allow --no-upnp TCP $port
 ### (It's compatible with sed regular expressions syntax)
 
 # See is squid3 folder is there
-if [ -d "/etc/squid3" ]; then 
+if [ -d "/etc/squid3" ]; then
 		squid="squid3"
-		
+
 # If squid3 folder is not found look for squid folder
 elif [ -d "/etc/squid" ]; then
 		squid="squid"
@@ -65,25 +89,22 @@ elif [ -d "/etc/squid" ]; then
 # If both folders are not found then call ynh_die
 else
 		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually by apt-get install squid3"
-  
+
 fi
-
-ynh_replace_string "__PORT__"    "$port"   "../conf/squid.conf"
-ynh_replace_string "__SQUID__"   "$squid"   "../conf/squid.conf"
-cp -f "../conf/squid.conf" "/etc/$squid/."
-# Save squid folder
-ynh_app_setting_set $app squid_folder $squid
-
-
-#=================================================
-# SPECIFIC UPGRADE
-#=================================================
-
 ### Verify the checksum of a file, stored by `ynh_store_file_checksum` in the install script.
 ### And create a backup of this file if the checksum is different. So the file will be backed up if the admin had modified it.
-ynh_backup_if_checksum_is_different "/etc/$squid/squid.conf"
+ynh_backup_if_checksum_is_different --file="/etc/$squid/squid.conf"
+
+ynh_replace_string --match_string="__PORT__"    --replace_string="$port"   --target_file="../conf/squid.conf"
+ynh_replace_string --match_string="__SQUID__"   --replace_string="$squid"   --target_file="../conf/squid.conf"
+cp -f "../conf/squid.conf" "/etc/$squid/."
+# Save squid folder
+ynh_app_setting_set --app=$app --key=squid_folder --value=$squid
+
+
+
 # Recalculate and store the checksum of the file for the next upgrade.
-ynh_store_file_checksum "/etc/$squid/squid.conf"
+ynh_store_file_checksum --file="/etc/$squid/squid.conf"
 
 #=================================================
 # ADVERTISE SERVICE IN ADMIN PANEL
@@ -105,4 +126,3 @@ yunohost service add squid3 --log "/var/log/$squid/access.log"
 
 service $squid restart
 yunohost app ssowatconf
-

@@ -26,6 +26,16 @@ ynh_abort_if_errors
 
 squid_port=$YNH_APP_ARG_SQUID_PORT
 
+### If it's a multi-instance app, meaning it can be installed several times independently
+### The id of the app as stated in the manifest is available as $YNH_APP_ID
+### The instance number is available as $YNH_APP_INSTANCE_NUMBER (equals "1", "2", ...)
+### The app instance name is available as $YNH_APP_INSTANCE_NAME
+###    - the first time the app is installed, YNH_APP_INSTANCE_NAME = ynhexample
+###    - the second time the app is installed, YNH_APP_INSTANCE_NAME = ynhexample__2
+###    - ynhexample__{N} for the subsequent installations, with N=3,4, ...
+### The app instance name is probably what interests you most, since this is
+### guaranteed to be unique. This is a good unique identifier to define installation path,
+### db names, ...
 app=$YNH_APP_INSTANCE_NAME
 
 #=================================================
@@ -33,30 +43,38 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 # FIND AND OPEN A PORT
 #=================================================
+ynh_script_progression --message="Configuring firewall..."
 
 ### Use these lines if you have to open a port for the application
 ### `ynh_find_port` will find the first available port starting from the given port.
 ### If you're not using these lines:
 ###		- Remove the section "CLOSE A PORT" in the remove script
 
-# Find a free port
-port=$(ynh_find_port $squid_port)
-# Open this port
-yunohost firewall allow --no-upnp TCP $port 2>&1
-ynh_app_setting_set $app port $port
+# Find an available port
+port=$(ynh_find_port --port=$squid_port)
+ynh_app_setting_set --app=$app --key=port --value=$port
+
+# Optional: Expose this port publicly
+# (N.B. : you only need to do this if the app actually needs to expose the port publicly.
+# If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
+
+# Open the port
+ ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
 
 #=================================================
 # INSTALL DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Installing dependencies..."
 
 ### `ynh_install_app_dependencies` allows you to add any "apt" dependencies to the package.
 ### Those deb packages will be installed as dependencies of this package.
 ### If you're not using this helper:
 ###		- Remove the section "REMOVE DEPENDENCIES" in the remove script
+###		- Remove the variable "pkg_dependencies" in _common.sh
 ###		- As well as the section "REINSTALL DEPENDENCIES" in the restore script
 ###		- And the section "UPGRADE DEPENDENCIES" in the upgrade script
 
-ynh_install_app_dependencies squid3 mailutils
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # MODIFY A CONFIG FILE
@@ -65,24 +83,25 @@ ynh_install_app_dependencies squid3 mailutils
 ### `ynh_replace_string` is used to replace a string in a file.
 ### (It's compatible with sed regular expressions syntax)
 
-# See is squid3 folder is there
-if [ -d "/etc/squid3" ]; then 
+# See if squid3 folder exits
+if [ -d "/etc/squid3" ]; then
 		squid="squid3"
 
 # If squid3 folder is not found look for squid folder
 elif [ -d "/etc/squid" ]; then
 		squid="squid"
-		
+
 # If both folders are not found then call ynh_die
 else
 		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually by apt-get install squid3"
-  
+
 fi
-ynh_replace_string "__PORT__"    "$port"   "../conf/squid.conf"
-ynh_replace_string "__SQUID__"   "$squid"   "../conf/squid.conf"
+ynh_replace_string --match_string="__PORT__"    --replace_string="$port"   --target_file="../conf/squid.conf"
+ynh_replace_string --match_string="__SQUID__"   --replace_string="$squid"   --target_file="../conf/squid.conf"
 cp -f "../conf/squid.conf" "/etc/$squid/."
-# Save squid folder
-ynh_app_setting_set $app squid_folder $squid
+# Save squid folder in app settings
+
+ynh_app_setting_set --app=$app --key=squid_folder --value=$squid
 
 
 #=================================================
@@ -94,29 +113,60 @@ ynh_app_setting_set $app squid_folder $squid
 ### you can make a backup of this file before modifying it again if the admin had modified it.
 
 # Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum "/etc/$squid/squid.conf"
+ynh_store_file_checksum --file="/etc/$squid/squid.conf"
 
 
 #=================================================
 # ADVERTISE SERVICE IN ADMIN PANEL
 #=================================================
 
-### `yunohost service add` is a CLI yunohost command to add a service in the admin panel.
-### You'll find the service in the 'services' section of YunoHost admin panel.
-### This CLI command would be useless if the app does not have any services (systemd or sysvinit)
+#=================================================
+# INTEGRATE SERVICE IN YUNOHOST
+#=================================================
+ynh_script_progression --message="Integrating service in YunoHost..."
+### `yunohost service add` integrates a service in YunoHost. It then gets
+### displayed in the admin interface and through the others `yunohost service` commands.
+### (N.B. : this line only makes sense if the app adds a service to the system!)
 ### If you're not using these lines:
 ###		- You can remove these files in conf/.
-###		- Remove the section "REMOVE SERVICE FROM ADMIN PANEL" in the remove script
-###		- As well as the section ADVERTISE SERVICE IN ADMIN PANEL" in the restore script
+###		- Remove the section "REMOVE SERVICE INTEGRATION IN YUNOHOST" in the remove script
+###		- As well as the section "INTEGRATE SERVICE IN YUNOHOST" in the restore script
+###		- And the section "INTEGRATE SERVICE IN YUNOHOST" in the upgrade script
 
-yunohost service add squid3 --log "/var/log/$squid/access.log"
+yunohost service add $app --description "Squid3 a web proxy service" --log "/var/log/$squid/access.log"
 
+### Additional options starting with 3.8:
+###
+### --needs_exposed_ports "$port" a list of ports that needs to be publicly exposed
+###                               which will then be checked by YunoHost's diagnosis system
+###                               (N.B. DO NOT USE THIS is the port is only internal !!!)
+###
+### --test_status "some command"  a custom command to check the status of the service
+###                               (only relevant if 'systemctl status' doesn't do a good job)
+###
+### --test_conf "some command"    some command similar to "nginx -t" that validates the conf of the service
+###
+### Re-calling 'yunohost service add' during the upgrade script is the right way
+### to proceed if you later realize that you need to enable some flags that
+### weren't enabled on old installs (be careful it'll override the existing
+### service though so you should re-provide all relevant flags when doing so)
+###
 
 #=================================================
-# RESTART SQUID'S SERVICE and SSOWATCONF
+# START SYSTEMD SERVICE
 #=================================================
+ynh_script_progression --message="Starting a systemd service..."
+### `ynh_systemd_action` is used to start a systemd service for an app.
+### Only needed if you have configure a systemd service
+### If you're not using these lines:
+###		- Remove the section "STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the backup script
+###		- As well as the section "START SYSTEMD SERVICE" in the restore script
+###		- As well as the section"STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the upgrade script
+###		- And the section "STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the change_url script
 
-service $squid restart
+# Start a systemd service
+ynh_systemd_action --service_name=$squid --action="start" --log_path="/var/log/$squid/access.log" --needs_exposed_ports "$port"
+
 yunohost app ssowatconf
 
 #=================================================
@@ -124,22 +174,28 @@ yunohost app ssowatconf
 #=================================================
 
 message="You can find a config file at /etc/$squid/squid.conf
-Squid 3 will work with your registered users. Just put the username and password when asked.
+Squid 3 will work with your registered users through LDAP. Just put the username and password when asked.
 
 To configure on Firefox go to preferences->general->network proxy->manual proxy configuration.
 
 Enter these value in the below feilds.
-
-Http proxy: your any registered domain name or ip
-
-port: $port
-
-Tick mark use this proxy server for all protocols
-
-No proxy for: localhost, 127.0.0.1
-
-Save and restart borwser.
-
-If you facing an issue or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/squid3_ynh/issues"
+---------------------------------------------------------------------
+| Http proxy: Your any registered domain name or ip eg domain.tld
+|--------------------------------------------------------------------
+|port: $port
+|--------------------------------------------------------------------
+|Tick mark use this proxy server for all protocols
+|--------------------------------------------------------------------
+|No proxy for: localhost, 127.0.0.1
+|--------------------------------------------------------------------
+|Save and restart borwser.
+---------------------------------------------------------------------
+If you are facing any issues or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/squid3_ynh/issues"
 
 ynh_send_readme_to_admin "$message"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Installation of $app completed"
