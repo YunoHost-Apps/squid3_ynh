@@ -45,10 +45,10 @@ ynh_install_app_dependencies $pkg_dependencies
 # CLOSE A PORT
 #=================================================
 # If #new_port is not defined test the $port and keep it open
-if [ -z $new_port ] then
+if [ -z $new_port ]; then
 	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $squid_port
 	ynh_app_setting_set --app=$app --key=port --value=$squid_port
-# If $new_port is define close the $port and open the $new_port
+	# If $new_port is define close the $port and open the $new_port
 else
 	#Close $port
 	if yunohost firewall list | grep -q "\- $squid_port$"
