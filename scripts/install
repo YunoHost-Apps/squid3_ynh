@@ -173,7 +173,7 @@ yunohost app ssowatconf
 # SEND A README FOR THE ADMIN
 #=================================================
 
-message="You can find a config file at /etc/$squid/squid.conf
+echo "You can find a config file at /etc/$squid/squid.conf
 Squid 3 will work with your registered users through LDAP. Just put the username and password when asked.
 
 To configure on Firefox go to preferences->general->network proxy->manual proxy configuration.
@@ -190,9 +190,9 @@ Enter these value in the below feilds.
 |--------------------------------------------------------------------
 |Save and restart borwser.
 ---------------------------------------------------------------------
-If you are facing any issues or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/squid3_ynh/issues"
+If you are facing any issues or want to improve this app, please open a new issue in this project: https://github.com/YunoHost-Apps/squid3_ynh/issues" > mail_to_send
 
-ynh_send_readme_to_admin "$message"
+ynh_send_readme_to_admin --app_message="mail_to_send" --type="install"
 
 #=================================================
 # END OF SCRIPT
