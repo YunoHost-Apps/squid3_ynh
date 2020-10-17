@@ -15,6 +15,7 @@ source /usr/share/yunohost/helpers
 
 app=$YNH_APP_INSTANCE_NAME
 port=$(ynh_app_setting_get $app port)
+new_port=$(ynh_app_setting_get $app new_port)
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -40,13 +41,36 @@ ynh_script_progression --message="Upgrading dependencies..." -
 
 ynh_install_app_dependencies $pkg_dependencies
 
+#=================================================
+# CLOSE A PORT
+#=================================================
+# If #new_port is not defined test the $port and keep it open
+if [ -z $new_port ] then
+	# Optional: Expose this port publicly
+	# (N.B. : you only need to do this if the app actually needs to expose the port publicly.
+	# If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
 
-# Optional: Expose this port publicly
-# (N.B. : you only need to do this if the app actually needs to expose the port publicly.
-# If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
+	# Find an available port
+	port=$(ynh_find_port --port=$squid_port)
+	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
+	ynh_app_setting_set --app=$app --key=port --value=$port
+# If $new_port is define close the $port and open the $new_port
+else
+	#Close $port
+	if yunohost firewall list | grep -q "\- $port$"
+	then
+		ynh_script_progression --message="Closing port $port..."
+		ynh_exec_warn_less yunohost firewall disallow TCP $port
+	fi
 
-# Open the port
- ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
+	# Open $new_port
+	port=$(ynh_find_port --port=$squid_new_port)
+	#Add the value of $new_port to $port
+	ynh_app_setting_set --app=$app --key=port --value=$port
+	#Remove the value of $new_port
+	ynh_app_setting_set --app=$app --key=new_port --value=""
+fi
+
 
 #=================================================
 # MODIFY A CONFIG FILE

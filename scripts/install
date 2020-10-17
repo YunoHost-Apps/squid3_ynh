@@ -25,6 +25,7 @@ ynh_abort_if_errors
 #=================================================
 
 squid_port=$YNH_APP_ARG_SQUID_PORT
+new_port=""
 
 ### If it's a multi-instance app, meaning it can be installed several times independently
 ### The id of the app as stated in the manifest is available as $YNH_APP_ID
@@ -53,6 +54,7 @@ ynh_script_progression --message="Configuring firewall..."
 # Find an available port
 port=$(ynh_find_port --port=$squid_port)
 ynh_app_setting_set --app=$app --key=port --value=$port
+ynh_app_setting_set --app=$app --key=new_port --value=$new_port
 
 # Optional: Expose this port publicly
 # (N.B. : you only need to do this if the app actually needs to expose the port publicly.

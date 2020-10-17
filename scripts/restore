@@ -41,8 +41,14 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 # OPEN PORTS
 #=================================================
+# Optional: Expose this port publicly
+	# (N.B. : you only need to do this if the app actually needs to expose the port publicly.
+	# If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
 
-yunohost firewall allow --no-upnp TCP $port
+	# Find an available port
+	port=$(ynh_find_port --port=$squid_port)
+	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
+	ynh_app_setting_set --app=$app --key=port --value=$port
 
 #=================================================
 # MODIFY A CONFIG FILE
@@ -109,4 +115,4 @@ ynh_send_readme_to_admin --app_message="mail_to_send" --type="install"
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Restoration completed for $app" --time --last
+ynh_script_progression --message="Restoration completed for $app"
