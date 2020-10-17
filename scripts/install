@@ -165,7 +165,7 @@ ynh_script_progression --message="Starting a systemd service..."
 ###		- And the section "STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the change_url script
 
 # Start a systemd service
-ynh_systemd_action --service_name=$squid --action="start" --log_path="/var/log/$squid/access.log" --needs_exposed_ports "$port"
+ynh_systemd_action --service_name=$squid --action="start" --log_path="/var/log/$squid/access.log"
 
 yunohost app ssowatconf
 
