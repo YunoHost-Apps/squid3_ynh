@@ -14,7 +14,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 app=$YNH_APP_INSTANCE_NAME
-port=$(ynh_app_setting_get $app port)
+squid_port=$(ynh_app_setting_get $app squid_port)
 new_port=$(ynh_app_setting_get $app new_port)
 
 #=================================================
@@ -37,7 +37,7 @@ ynh_abort_if_errors
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..." -
+ynh_script_progression --message="Upgrading dependencies..."
 
 ynh_install_app_dependencies $pkg_dependencies
 
@@ -46,27 +46,21 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 # If #new_port is not defined test the $port and keep it open
 if [ -z $new_port ] then
-	# Optional: Expose this port publicly
-	# (N.B. : you only need to do this if the app actually needs to expose the port publicly.
-	# If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
-
-	# Find an available port
-	port=$(ynh_find_port --port=$squid_port)
-	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
-	ynh_app_setting_set --app=$app --key=port --value=$port
+	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $squid_port
+	ynh_app_setting_set --app=$app --key=port --value=$squid_port
 # If $new_port is define close the $port and open the $new_port
 else
 	#Close $port
-	if yunohost firewall list | grep -q "\- $port$"
+	if yunohost firewall list | grep -q "\- $squid_port$"
 	then
-		ynh_script_progression --message="Closing port $port..."
-		ynh_exec_warn_less yunohost firewall disallow TCP $port
+		ynh_script_progression --message="Closing port $squid_port..."
+		ynh_exec_warn_less yunohost firewall disallow TCP $squid_port
 	fi
 
 	# Open $new_port
 	port=$(ynh_find_port --port=$squid_new_port)
 	#Add the value of $new_port to $port
-	ynh_app_setting_set --app=$app --key=port --value=$port
+	ynh_app_setting_set --app=$app --key=squid_port --value=$squid_port
 	#Remove the value of $new_port
 	ynh_app_setting_set --app=$app --key=new_port --value=""
 fi
@@ -96,7 +90,7 @@ fi
 ### And create a backup of this file if the checksum is different. So the file will be backed up if the admin had modified it.
 ynh_backup_if_checksum_is_different --file="/etc/$squid/squid.conf"
 
-ynh_replace_string --match_string="__PORT__"    --replace_string="$port"   --target_file="../conf/squid.conf"
+ynh_replace_string --match_string="__PORT__"    --replace_string="$squid_port"   --target_file="../conf/squid.conf"
 ynh_replace_string --match_string="__SQUID__"   --replace_string="$squid"   --target_file="../conf/squid.conf"
 cp -f "../conf/squid.conf" "/etc/$squid/."
 # Save squid folder
@@ -119,7 +113,7 @@ ynh_store_file_checksum --file="/etc/$squid/squid.conf"
 ###		- Remove the section "REMOVE SERVICE FROM ADMIN PANEL" in the remove script
 ###		- As well as the section ADVERTISE SERVICE IN ADMIN PANEL" in the restore script
 
-yunohost service add squid3 --log "/var/log/$squid/access.log"
+yunohost service add squid3 --log "/var/log/$squid/cache.log"
 
 #=================================================
 # RESTART SQUID'S SERVICE and SSOWATCONF
@@ -141,7 +135,7 @@ Enter these value in the below feilds.
 ---------------------------------------------------------------------
 | Http proxy: Your any registered domain name or ip eg domain.tld
 |
-|port: $port
+|port: $squid_port
 |
 |Tick mark use this proxy server for all protocols
 |

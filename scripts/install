@@ -52,8 +52,8 @@ ynh_script_progression --message="Configuring firewall..."
 ###		- Remove the section "CLOSE A PORT" in the remove script
 
 # Find an available port
-port=$(ynh_find_port --port=$squid_port)
-ynh_app_setting_set --app=$app --key=port --value=$port
+squid_port=$(ynh_find_port --port=$squid_port)
+ynh_app_setting_set --app=$app --key=squid_port --value=$squid_port
 ynh_app_setting_set --app=$app --key=new_port --value=$new_port
 
 # Optional: Expose this port publicly
@@ -61,7 +61,7 @@ ynh_app_setting_set --app=$app --key=new_port --value=$new_port
 # If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
 
 # Open the port
- ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
+ ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $squid_port
 
 #=================================================
 # INSTALL DEPENDENCIES
@@ -98,7 +98,7 @@ else
 		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually by apt-get install squid3"
 
 fi
-ynh_replace_string --match_string="__PORT__"    --replace_string="$port"   --target_file="../conf/squid.conf"
+ynh_replace_string --match_string="__PORT__"    --replace_string="$squid_port"   --target_file="../conf/squid.conf"
 ynh_replace_string --match_string="__SQUID__"   --replace_string="$squid"   --target_file="../conf/squid.conf"
 cp -f "../conf/squid.conf" "/etc/$squid/."
 # Save squid folder in app settings
@@ -167,7 +167,7 @@ ynh_script_progression --message="Starting a systemd service..."
 ###		- And the section "STOP SYSTEMD SERVICE" and "START SYSTEMD SERVICE" in the change_url script
 
 # Start a systemd service
-ynh_systemd_action --service_name=$squid --action="restart" --log_path="/var/log/$squid/access.log"
+ynh_systemd_action --service_name=$squid --action="restart" --log_path="/var/log/$squid/cache.log"
 
 yunohost app ssowatconf
 
@@ -184,7 +184,7 @@ Enter these value in the below feilds.
 ---------------------------------------------------------------------
 | Http proxy: Your any registered domain name or ip eg domain.tld
 |
-|port: $port
+|port: $squid_port
 |
 |Tick mark use this proxy server for all protocols
 |

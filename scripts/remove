@@ -14,7 +14,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Loading installation settings..."
 app=$YNH_APP_INSTANCE_NAME
-port=$(ynh_app_setting_get $app port)
+squid_port=$(ynh_app_setting_get $app squid_port)
 squid=$(ynh_app_setting_get $app squid_folder)
 
 #=================================================
@@ -42,10 +42,10 @@ ynh_remove_app_dependencies
 # CLOSE A PORT
 #=================================================
 
-if yunohost firewall list | grep -q "\- $port$"
+if yunohost firewall list | grep -q "\- $squid_port$"
 then
-	ynh_script_progression --message="Closing port $port..."
-	ynh_exec_warn_less yunohost firewall disallow TCP $port
+	ynh_script_progression --message="Closing port $squid_port..."
+	ynh_exec_warn_less yunohost firewall disallow TCP $squid_port
 fi
 
 #=================================================

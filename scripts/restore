@@ -26,7 +26,7 @@ ynh_abort_if_errors
 
 app=$YNH_APP_INSTANCE_NAME
 
-port=$(ynh_app_setting_get $app port)
+squid_port=$(ynh_app_setting_get $app squid_port)
 
 #=================================================
 # SPECIFIC RESTORATION
@@ -46,9 +46,9 @@ ynh_install_app_dependencies $pkg_dependencies
 	# If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
 
 	# Find an available port
-	port=$(ynh_find_port --port=$squid_port)
-	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
-	ynh_app_setting_set --app=$app --key=port --value=$port
+	squid_port=$(ynh_find_port --port=$squid_port)
+	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $squid_port
+	ynh_app_setting_set --app=$app --key=squid_port --value=$squid_port
 
 #=================================================
 # MODIFY A CONFIG FILE
@@ -70,7 +70,7 @@ else
 fi
 
 # Save squid folder
-ynh_app_setting_set $app squid_folder $squid
+ynh_app_setting_set --app=$app --key=squid_folder --value=$squid
 
 #=================================================
 # RESTORE INOTIFY'S CONFIG
@@ -83,7 +83,7 @@ yunohost app ssowatconf
 # ADVERTISE SERVICE IN ADMIN PANEL
 #=================================================
 
-yunohost service add squid3  --log "/var/log/$squid/access.log"
+yunohost service add squid3  --log "/var/log/$squid/cache.log"
 
 
 #=================================================
@@ -99,7 +99,7 @@ Enter these value in the below feilds.
 ---------------------------------------------------------------------
 | Http proxy: Your any registered domain name or ip eg domain.tld
 |
-|port: $port
+|port: $squid_port
 |
 |Tick mark use this proxy server for all protocols
 |
