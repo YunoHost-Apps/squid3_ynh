@@ -24,7 +24,7 @@ ynh_abort_if_errors
 # LOAD SETTINGS
 #=================================================
 
-p=$YNH_APP_INSTANCE_NAME
+app=$YNH_APP_INSTANCE_NAME
 
 squid_port=$(ynh_app_setting_get $app squid_port)
 
