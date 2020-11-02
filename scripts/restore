@@ -6,7 +6,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
-source ../settings/scripts/_common.sh
+source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
@@ -24,7 +24,7 @@ ynh_abort_if_errors
 # LOAD SETTINGS
 #=================================================
 
-app=$YNH_APP_INSTANCE_NAME
+p=$YNH_APP_INSTANCE_NAME
 
 squid_port=$(ynh_app_setting_get $app squid_port)
 
@@ -65,7 +65,7 @@ elif [ -d "/etc/squid" ]; then
 		squid="squid"
 # If both folders are not found then call ynh_die
 else
-		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually by apt-get install squid3"
+		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually."
 
 fi
 

@@ -151,4 +151,4 @@ ynh_send_readme_to_admin --app_message="mail_to_send" --type="install"
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --time --last
+ynh_script_progression --message="Upgrade of $app completed"
