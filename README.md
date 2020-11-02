@@ -1,6 +1,7 @@
 # Squid3 Proxy for Yunohost with LDAP
 
 [![Integration level](https://dash.yunohost.org/integration/squid3.svg)](https://dash.yunohost.org/appci/app/squid3) ![](https://ci-apps.yunohost.org/ci/badges/squid3.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/squid3.maintain.svg)
+
 [![Install Squid3 with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=squid3)
 
 ## Interesting links
