@@ -13,7 +13,9 @@ source /usr/share/yunohost/helpers
 # LOAD SETTINGS
 #=================================================
 ynh_script_progression --message="Loading installation settings..."
+
 app=$YNH_APP_INSTANCE_NAME
+
 squid_port=$(ynh_app_setting_get $app squid_port)
 squid=$(ynh_app_setting_get $app squid_folder)
 

@@ -31,7 +31,6 @@ ynh_clean_setup () {
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
 
-
 #=================================================
 # SPECIFIC RESTORATION
 #=================================================
@@ -65,7 +64,6 @@ else
 	ynh_app_setting_set --app=$app --key=new_port --value=""
 fi
 
-
 #=================================================
 # MODIFY A CONFIG FILE
 #=================================================
@@ -96,22 +94,12 @@ cp -f "../conf/squid.conf" "/etc/$squid/."
 # Save squid folder
 ynh_app_setting_set --app=$app --key=squid_folder --value=$squid
 
-
-
 # Recalculate and store the checksum of the file for the next upgrade.
 ynh_store_file_checksum --file="/etc/$squid/squid.conf"
 
 #=================================================
 # ADVERTISE SERVICE IN ADMIN PANEL
 #=================================================
-
-### `yunohost service add` is a CLI yunohost command to add a service in the admin panel.
-### You'll find the service in the 'services' section of YunoHost admin panel.
-### This CLI command would be useless if the app does not have any services (systemd or sysvinit)
-### If you're not using these lines:
-###		- You can remove these files in conf/.
-###		- Remove the section "REMOVE SERVICE FROM ADMIN PANEL" in the remove script
-###		- As well as the section ADVERTISE SERVICE IN ADMIN PANEL" in the restore script
 
 yunohost service add squid3 --log "/var/log/$squid/cache.log"
 
