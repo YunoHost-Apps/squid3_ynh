@@ -7,7 +7,9 @@
 # dependencies used by the app
 pkg_dependencies="squid3 mailutils"
 
-
+#=================================================
+# FUTURE OFFICIAL HELPERS
+#=================================================
 
 # Send an email to inform the administrator
 #
