@@ -21,7 +21,6 @@ ynh_abort_if_errors
 #=================================================
 
 squid_port=$YNH_APP_ARG_SQUID_PORT
-new_port=""
 
 app=$YNH_APP_INSTANCE_NAME
 
@@ -35,10 +34,10 @@ ynh_script_progression --message="Configuring firewall..."
 # Find an available port
 squid_port=$(ynh_find_port --port=$squid_port)
 ynh_app_setting_set --app=$app --key=squid_port --value=$squid_port
-ynh_app_setting_set --app=$app --key=new_port --value=$new_port
 
 # Open the port
- ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $squid_port
+ynh_script_progression --message="Configuring firewall..."
+ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $squid_port
 
 #=================================================
 # INSTALL DEPENDENCIES
@@ -48,42 +47,37 @@ ynh_script_progression --message="Installing dependencies..."
 ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
-# MODIFY A CONFIG FILE
+# SPECIFIC SETUP
 #=================================================
+# ADD A CONFIGURATION
+#=================================================
+ynh_script_progression --message="Adding a configuration file..."
 
 # See if squid3 folder exits
 if [ -d "/etc/squid3" ]; then
-		squid="squid3"
+	squid="squid3"
 
 # If squid3 folder is not found look for squid folder
 elif [ -d "/etc/squid" ]; then
-		squid="squid"
+	squid="squid"
 
 # If both folders are not found then call ynh_die
 else
-		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually."
+	ynh_die --message="No squid folder found in /etc. Looks like squid3 package is not installed. Try installing it manually."
 
 fi
-ynh_replace_string --match_string="__PORT__"    --replace_string="$squid_port"   --target_file="../conf/squid.conf"
-ynh_replace_string --match_string="__SQUID__"   --replace_string="$squid"   --target_file="../conf/squid.conf"
-cp -f "../conf/squid.conf" "/etc/$squid/."
-# Save squid folder in app settings
-
 ynh_app_setting_set --app=$app --key=squid_folder --value=$squid
 
-#=================================================
-# STORE THE CONFIG FILE CHECKSUM
-#=================================================
+ynh_add_config --template="../conf/squid.conf" --destination="/etc/$squid/squid.conf"
 
-# Calculate and store the config file checksum into the app settings
-ynh_store_file_checksum --file="/etc/$squid/squid.conf"
-
+#=================================================
+# GENERIC FINALIZATION
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app --description "Squid3 a web proxy service" --log "/var/log/$squid/access.log"
+yunohost service add $app --description "Squid3 a web proxy service" --log="/var/log/$squid/access.log" --needs_exposed_ports $squid_port
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -92,8 +86,6 @@ ynh_script_progression --message="Starting a systemd service..."
 
 # Start a systemd service
 ynh_systemd_action --service_name=$squid --action="restart" --log_path="/var/log/$squid/cache.log"
-
-yunohost app ssowatconf
 
 #=================================================
 # SEND A README FOR THE ADMIN

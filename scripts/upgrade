@@ -12,10 +12,19 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
-squid_port=$(ynh_app_setting_get $app squid_port)
-new_port=$(ynh_app_setting_get $app new_port)
+
+squid_port=$(ynh_app_setting_get --app=$app --key=squid_port)
+squid=$(ynh_app_setting_get --app=$app --key=squid_folder)
+
+#=================================================
+# CHECK VERSION
+#=================================================
+ynh_script_progression --message="Checking version..."
+
+upgrade_type=$(ynh_check_app_version_changed)
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
@@ -25,14 +34,27 @@ ynh_script_progression --message="Backing up the app before upgrading (may take 
 # Backup the current version of the app
 ynh_backup_before_upgrade
 ynh_clean_setup () {
-	# restore it if the upgrade fails
+	ynh_clean_check_starting
+	# Restore it if the upgrade fails
 	ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
 
 #=================================================
-# SPECIFIC RESTORATION
+# STANDARD UPGRADE STEPS
+#=================================================
+# STOP SYSTEMD SERVICE
+#=================================================
+ynh_script_progression --message="Stopping a systemd service..."
+
+ynh_systemd_action --service_name=$squid --action="stop" --log_path="/var/log/$squid/cache.log"
+
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+ynh_script_progression --message="Ensuring downward compatibility..."
+
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
@@ -41,74 +63,40 @@ ynh_script_progression --message="Upgrading dependencies..."
 ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
-# CLOSE A PORT
+# UPDATE A CONFIG FILE
 #=================================================
-# If #new_port is not defined test the $port and keep it open
-if [ -z $new_port ]; then
-	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $squid_port
-	ynh_app_setting_set --app=$app --key=port --value=$squid_port
-	# If $new_port is define close the $port and open the $new_port
-else
-	#Close $port
-	if yunohost firewall list | grep -q "\- $squid_port$"
-	then
-		ynh_script_progression --message="Closing port $squid_port..."
-		ynh_exec_warn_less yunohost firewall disallow TCP $squid_port
-	fi
+ynh_script_progression --message="Updating a configuration file..."
 
-	# Open $new_port
-	port=$(ynh_find_port --port=$squid_new_port)
-	#Add the value of $new_port to $port
-	ynh_app_setting_set --app=$app --key=squid_port --value=$squid_port
-	#Remove the value of $new_port
-	ynh_app_setting_set --app=$app --key=new_port --value=""
-fi
-
-#=================================================
-# MODIFY A CONFIG FILE
-#=================================================
-
-### `ynh_replace_string` is used to replace a string in a file.
-### (It's compatible with sed regular expressions syntax)
-
-# See is squid3 folder is there
+# See if squid3 folder exits
 if [ -d "/etc/squid3" ]; then
-		squid="squid3"
+	squid="squid3"
 
 # If squid3 folder is not found look for squid folder
 elif [ -d "/etc/squid" ]; then
-		squid="squid"
+	squid="squid"
 
 # If both folders are not found then call ynh_die
 else
-		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually by apt-get install squid3"
+	ynh_die --message="No squid folder found in /etc. Looks like squid3 package is not installed. Try installing it manually."
 
 fi
-### Verify the checksum of a file, stored by `ynh_store_file_checksum` in the install script.
-### And create a backup of this file if the checksum is different. So the file will be backed up if the admin had modified it.
-ynh_backup_if_checksum_is_different --file="/etc/$squid/squid.conf"
-
-ynh_replace_string --match_string="__PORT__"    --replace_string="$squid_port"   --target_file="../conf/squid.conf"
-ynh_replace_string --match_string="__SQUID__"   --replace_string="$squid"   --target_file="../conf/squid.conf"
-cp -f "../conf/squid.conf" "/etc/$squid/."
-# Save squid folder
 ynh_app_setting_set --app=$app --key=squid_folder --value=$squid
 
-# Recalculate and store the checksum of the file for the next upgrade.
-ynh_store_file_checksum --file="/etc/$squid/squid.conf"
+ynh_add_config --template="../conf/squid.conf" --destination="/etc/$squid/squid.conf"
 
 #=================================================
-# ADVERTISE SERVICE IN ADMIN PANEL
+# INTEGRATE SERVICE IN YUNOHOST
 #=================================================
+ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add squid3 --log "/var/log/$squid/cache.log"
+yunohost service add $app --description "Squid3 a web proxy service" --log="/var/log/$squid/access.log" --needs_exposed_ports $squid_port
 
 #=================================================
-# RESTART SQUID'S SERVICE and SSOWATCONF
+# START SYSTEMD SERVICE
 #=================================================
+ynh_script_progression --message="Starting a systemd service..."
 
-service $squid restart
-yunohost app ssowatconf
+ynh_systemd_action --service_name=$squid --action="restart" --log_path="/var/log/$squid/cache.log"
 
 #=================================================
 # SEND A README FOR THE ADMIN
