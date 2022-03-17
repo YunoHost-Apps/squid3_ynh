@@ -6,6 +6,7 @@
 # IMPORT GENERIC HELPERS
 #=================================================
 
+# Keep this path for calling _common.sh inside the execution's context of backup and restore scripts
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
@@ -14,8 +15,7 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 ynh_clean_setup () {
-	#### Remove this function if there's nothing to clean before calling the remove script.
-	true
+	ynh_clean_check_starting
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
@@ -23,17 +23,20 @@ ynh_abort_if_errors
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Loading installation settings..."
 
 app=$YNH_APP_INSTANCE_NAME
 
-squid_port=$(ynh_app_setting_get $app squid_port)
+squid_port=$(ynh_app_setting_get --app=$app --key=squid_port)
 
 #=================================================
 # SPECIFIC RESTORATION
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
+ynh_script_progression --message="Reinstalling dependencies..."
 
+# Define and install dependencies
 ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
@@ -41,50 +44,49 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 # OPEN PORTS
 #=================================================
-# Optional: Expose this port publicly
-	# (N.B. : you only need to do this if the app actually needs to expose the port publicly.
-	# If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
 
-	# Find an available port
-	squid_port=$(ynh_find_port --port=$squid_port)
-	ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $squid_port
-	ynh_app_setting_set --app=$app --key=squid_port --value=$squid_port
+# Find an available port
+squid_port=$(ynh_find_port --port=$squid_port)
+ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $squid_port
+ynh_app_setting_set --app=$app --key=squid_port --value=$squid_port
 
 #=================================================
-# MODIFY A CONFIG FILE
+# ADD A CONFIGURATION
 #=================================================
+ynh_script_progression --message="Adding a configuration file..."
 
-### `ynh_replace_string` is used to replace a string in a file.
-### (It's compatible with sed regular expressions syntax)
-
-# See is squid3 folder is there
+# See if squid3 folder exits
 if [ -d "/etc/squid3" ]; then
-		squid="squid3"
-		# If squid3 folder is not found look for squid folder
+	squid="squid3"
+
+# If squid3 folder is not found look for squid folder
 elif [ -d "/etc/squid" ]; then
-		squid="squid"
+	squid="squid"
+
 # If both folders are not found then call ynh_die
 else
-		ynh_die "No squid folder found in /etc. Looks like squid 3 package is not installed. Try installing it manually."
+	ynh_die --message="No squid folder found in /etc. Looks like squid3 package is not installed. Try installing it manually."
 
 fi
-
-# Save squid folder
 ynh_app_setting_set --app=$app --key=squid_folder --value=$squid
 
-#=================================================
-# RESTORE INOTIFY'S CONFIG
-#=================================================
-ynh_secure_remove "/etc/$squid/squid.conf"
-ynh_restore_file  "/etc/$squid/squid.conf"
-service $squid restart
-yunohost app ssowatconf
-#=================================================
-# ADVERTISE SERVICE IN ADMIN PANEL
-#=================================================
+ynh_secure_remove --file="/etc/$squid/squid.conf"
+ynh_add_config --template="../conf/squid.conf" --destination="/etc/$squid/squid.conf"
 
-yunohost service add squid3  --log "/var/log/$squid/cache.log"
+#=================================================
+# INTEGRATE SERVICE IN YUNOHOST
+#=================================================
+ynh_script_progression --message="Integrating service in YunoHost..."
 
+yunohost service add $app --description "Squid3 a web proxy service" --log="/var/log/$squid/access.log" --needs_exposed_ports $squid_port
+
+#=================================================
+# START SYSTEMD SERVICE
+#=================================================
+ynh_script_progression --message="Starting a systemd service..."
+
+# Start a systemd service
+ynh_systemd_action --service_name=$squid --action="restart" --log_path="/var/log/$squid/cache.log"
 
 #=================================================
 # SEND A README FOR THE ADMIN
