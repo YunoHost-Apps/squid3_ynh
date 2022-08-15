@@ -6,7 +6,7 @@
         "en": "Caching proxy for the Web supporting HTTP, HTTPS, FTP and more.",
         "fr": "Proxy cache pour le web, compatible HTTP, HTTPS, FTP et plus encore."
     },
-    "version": "1.0~ynh3",
+    "version": "4.13~ynh1",
     "url": "http://www.squid-cache.org/",
     "upstream": {
         "license": "GPL-2.0-only",
@@ -18,7 +18,7 @@
         "email": "anmol@datamol.org"
     },
     "requirements": {
-        "yunohost": ">= 4.3.0"
+        "yunohost": ">= 11.0.9"
     },
     "multi_instance": false,
     "services": [],
