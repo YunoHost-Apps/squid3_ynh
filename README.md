@@ -5,7 +5,7 @@ It shall NOT be edited by hand.
 
 # squid3 for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/squid3.svg)](https://dash.yunohost.org/appci/app/squid3) ![](https://ci-apps.yunohost.org/ci/badges/squid3.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/squid3.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/squid3.svg)](https://dash.yunohost.org/appci/app/squid3) ![Working status](https://ci-apps.yunohost.org/ci/badges/squid3.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/squid3.maintain.svg)  
 [![Install squid3 with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=squid3)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -20,9 +20,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more. It reduces bandwidth and improves response times by caching and reusing frequently-requested web pages. Squid has extensive access controls and makes a great server accelerator.
 
 
-**Shipped version:** 1.0~ynh3
-
-
+**Shipped version:** 4.13~ynh1
 
 ## Disclaimers / important information
 
@@ -49,19 +47,20 @@ Thanks to **Fred** to write the instruction to configure Squid for YunoHost. Fre
 
 ## Documentation and resources
 
-* Official app website: http://www.squid-cache.org
-* YunoHost documentation for this app: https://yunohost.org/app_squid3
-* Report a bug: https://github.com/YunoHost-Apps/squid3_ynh/issues
+* Official app website: <http://www.squid-cache.org>
+* YunoHost documentation for this app: <https://yunohost.org/app_squid3>
+* Report a bug: <https://github.com/YunoHost-Apps/squid3_ynh/issues>
 
 ## Developer info
 
 Please send your pull request to the [testing branch](https://github.com/YunoHost-Apps/squid3_ynh/tree/testing).
 
 To try the testing branch, please proceed like that.
-```
+
+``` bash
 sudo yunohost app install https://github.com/YunoHost-Apps/squid3_ynh/tree/testing --debug
 or
 sudo yunohost app upgrade squid3 -u https://github.com/YunoHost-Apps/squid3_ynh/tree/testing --debug
 ```
 
-**More info regarding app packaging:** https://yunohost.org/packaging_apps
+**More info regarding app packaging:** <https://yunohost.org/packaging_apps>

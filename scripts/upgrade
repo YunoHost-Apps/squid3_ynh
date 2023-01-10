@@ -89,7 +89,7 @@ ynh_add_config --template="../conf/squid.conf" --destination="/etc/$squid/squid.
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app --description "Squid3 a web proxy service" --log="/var/log/$squid/access.log" --needs_exposed_ports $squid_port
+yunohost service add $squid --description "Squid3 a web proxy service" --log="/var/log/$squid/access.log" --needs_exposed_ports $squid_port
 
 #=================================================
 # START SYSTEMD SERVICE
