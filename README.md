@@ -20,8 +20,7 @@ If you don't have YunoHost, please consult [the guide](https://yunohost.org/#/in
 Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more. It reduces bandwidth and improves response times by caching and reusing frequently-requested web pages. Squid has extensive access controls and makes a great server accelerator.
 
 
-**Shipped version:** 1.0~ynh3
-
+**Shipped version:** 4.13~ynh1
 ## Disclaimers / important information
 
 ## Instruction

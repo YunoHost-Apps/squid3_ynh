@@ -1,6 +1,6 @@
 ;; Test complet
 	; Manifest
-		port="8095"	(PORT)
+		port="8095"
 	; Checks
 		pkg_linter=1
 		setup_sub_dir=0
