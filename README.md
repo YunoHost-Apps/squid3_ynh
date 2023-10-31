@@ -5,7 +5,8 @@ It shall NOT be edited by hand.
 
 # squid3 for YunoHost
 
-[![Integration level](https://dash.yunohost.org/integration/squid3.svg)](https://dash.yunohost.org/appci/app/squid3) ![Working status](https://ci-apps.yunohost.org/ci/badges/squid3.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/squid3.maintain.svg)  
+[![Integration level](https://dash.yunohost.org/integration/squid3.svg)](https://dash.yunohost.org/appci/app/squid3) ![Working status](https://ci-apps.yunohost.org/ci/badges/squid3.status.svg) ![Maintenance status](https://ci-apps.yunohost.org/ci/badges/squid3.maintain.svg)
+
 [![Install squid3 with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=squid3)
 
 *[Lire ce readme en français.](./README_fr.md)*
@@ -47,7 +48,7 @@ Thanks to **Fred** to write the instruction to configure Squid for YunoHost. Fre
 ## Documentation and resources
 
 * Official app website: <http://www.squid-cache.org>
-* YunoHost documentation for this app: <https://yunohost.org/app_squid3>
+* YunoHost Store: <https://apps.yunohost.org/app/squid3>
 * Report a bug: <https://github.com/YunoHost-Apps/squid3_ynh/issues>
 
 ## Developer info

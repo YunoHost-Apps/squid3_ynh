@@ -5,15 +5,16 @@ It shall NOT be edited by hand.
 
 # squid3 pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/squid3.svg)](https://dash.yunohost.org/appci/app/squid3) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/squid3.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/squid3.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/squid3.svg)](https://dash.yunohost.org/appci/app/squid3) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/squid3.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/squid3.maintain.svg)
+
 [![Installer squid3 avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=squid3)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer squid3 rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer squid3 rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 ## Squid: Proxy with Optimising Web Delivery
 
@@ -46,8 +47,8 @@ Thanks to **Fred** to write the instruction to configure Squid for YunoHost. Fre
 
 ## Documentations et ressources
 
-* Site officiel de l'app : <http://www.squid-cache.org>
-* Documentation YunoHost pour cette app : <https://yunohost.org/app_squid3>
+* Site officiel de l’app : <http://www.squid-cache.org>
+* YunoHost Store: <https://apps.yunohost.org/app/squid3>
 * Signaler un bug : <https://github.com/YunoHost-Apps/squid3_ynh/issues>
 
 ## Informations pour les développeurs
@@ -62,4 +63,4 @@ ou
 sudo yunohost app upgrade squid3 -u https://github.com/YunoHost-Apps/squid3_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
