@@ -1,0 +1,44 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
+packaging_format = 2
+
+id = "squid3"
+name = "squid3"
+description.en = "Caching proxy for the Web supporting HTTP, HTTPS, FTP and more."
+description.fr = "Proxy cache pour le web, compatible HTTP, HTTPS, FTP et plus encore."
+
+version = "4.13~ynh1"
+
+maintainers = ["Anmol Sharma"]
+
+[upstream]
+license = "GPL-2.0-only"
+website = "http://www.squid-cache.org"
+cpe = "???" # FIXME: optional but recommended if relevant, this is meant to contain the Common Platform Enumeration, which is sort of a standard id for applications defined by the NIST. In particular, Yunohost may use this is in the future to easily track CVE (=security reports) related to apps. The CPE may be obtained by searching here: https://nvd.nist.gov/products/cpe/search. For example, for Nextcloud, the CPE is 'cpe:2.3:a:nextcloud:nextcloud' (no need to include the version number)
+fund = "???" # FIXME: optional but recommended (or remove if irrelevant / not applicable). This is meant to be an URL where people can financially support this app, especially when its development is based on volunteers and/or financed by its community. YunoHost may later advertise it in the webadmin.
+
+[integration]
+yunohost = ">= 11.0.9"
+architectures = "all"
+multi_instance = false
+ldap = true
+sso = false
+disk = "50M" # FIXME: replace with an **estimate** minimum disk requirement. e.g. 20M, 400M, 1G, ...
+ram.build = "50M" # FIXME: replace with an **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, ...
+ram.runtime = "50M" # FIXME: replace with an **estimate** minimum ram requirement. e.g. 50M, 400M, 1G, ...
+
+[install]
+
+[resources]
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.permissions]
+
+    [resources.ports]
+    main.default = 8095
+    main.exposed = "TCP"
+
+    [resources.apt]
+    packages = ["squid3", "mailutils"]
