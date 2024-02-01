@@ -10,55 +10,24 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
+# REMOVE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Loading installation settings..."
-
-app=$YNH_APP_INSTANCE_NAME
-
-squid_port=$(ynh_app_setting_get --app=$app --key=squid_port)
-squid=$(ynh_app_setting_get --app=$app --key=squid_folder)
-
-#=================================================
-# STANDARD REMOVE
-#=================================================
-# REMOVE SERVICE INTEGRATION IN YUNOHOST
-#=================================================
+ynh_script_progression --message="Removing system configurations related to $app..." --weight=1
 
 # Remove the service from the list of services known by YunoHost (added from `yunohost service add`)
-if ynh_exec_warn_less yunohost service status $squid >/dev/null
-then
-	ynh_script_progression --message="Removing $app service integration..."
-	yunohost service remove $squid
+if ynh_exec_warn_less yunohost service status "$squid_name" >/dev/null; then
+    yunohost service remove "$squid_name"
 fi
 
-#=================================================
-# REMOVE DEPENDENCIES
-#=================================================
-
-# Remove metapackage and its dependencies
-ynh_remove_app_dependencies
-#=================================================
-# CLOSE A PORT
-#=================================================
-
-if yunohost firewall list | grep -q "\- $squid_port$"
-then
-	ynh_script_progression --message="Closing port $squid_port..."
-	ynh_exec_warn_less yunohost firewall disallow TCP $squid_port
-fi
-
-#=================================================
-# SPECIFIC REMOVE
 #=================================================
 # REMOVE VARIOUS FILES
 #=================================================
 
 # Remove a directory securely
-ynh_secure_remove --file="/etc/$squid/"
+ynh_secure_remove --file="/etc/$squid_name/"
 
 # Remove the log files
-ynh_secure_remove --file="/var/log/$squid"
+ynh_secure_remove --file="/var/log/$squid_name"
 
 #=================================================
 # END OF SCRIPT

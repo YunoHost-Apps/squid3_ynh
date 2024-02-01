@@ -1,0 +1,43 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
+packaging_format = 2
+
+id = "squid3"
+name = "squid3"
+description.en = "Caching proxy for the Web supporting HTTP, HTTPS, FTP and more."
+description.fr = "Proxy cache pour le web, compatible HTTP, HTTPS, FTP et plus encore."
+
+version = "4.13~ynh1"
+
+maintainers = ["Anmol Sharma"]
+
+[upstream]
+license = "GPL-2.0-only"
+website = "http://www.squid-cache.org"
+cpe = "cpe:2.3:a:squid-cache:squid"
+
+[integration]
+yunohost = ">= 11.0.9"
+architectures = "all"
+multi_instance = false
+ldap = true
+sso = false
+disk = "50M"
+ram.build = "50M"
+ram.runtime = "50M"
+
+[install]
+
+[resources]
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.permissions]
+
+    [resources.ports]
+    main.default = 8095
+    main.exposed = "TCP"
+
+    [resources.apt]
+    packages = ["squid3", "mailutils"]
