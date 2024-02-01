@@ -15,13 +15,10 @@ source /usr/share/yunohost/helpers
 ynh_script_progression --message="Ensuring downward compatibility..."
 
 if [[ -n "${squid:-}" ]]; then
-    squid_name="$squid"
-    ynh_app_setting_set --app="$app" --key="squid_name" --value="$squid_name"
     ynh_app_setting_delete --app="$app" --key="squid"
 fi
-
-if [[ -z "${squid_name:-}" ]]; then
-    find_squid_version
+if [[ -n "${squid_name:-}" ]]; then
+    ynh_app_setting_delete --app="$app" --key="squid_name"
 fi
 
 #=================================================
@@ -31,7 +28,7 @@ fi
 #=================================================
 ynh_script_progression --message="Stopping a systemd service..."
 
-ynh_systemd_action --service_name="$squid_name" --action="stop" --log_path="/var/log/$squid_name/cache.log"
+ynh_systemd_action --service_name="squid" --action="stop" --log_path="/var/log/squid/cache.log"
 
 #=================================================
 # UPDATE A CONFIG FILE
@@ -40,21 +37,21 @@ ynh_script_progression --message="Updating a configuration file..."
 
 find_squid_version
 
-ynh_add_config --template="squid.conf" --destination="/etc/$squid_name/squid.conf"
+ynh_add_config --template="squid.conf" --destination="/etc/squid/squid.conf"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
 #=================================================
 ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
 
-yunohost service add "$squid_name" --description "Squid3 a web proxy service" --log="/var/log/$squid_name/access.log" --needs_exposed_ports "$port"
+yunohost service add "squid" --description "Squid3 a web proxy service" --log="/var/log/squid/access.log" --needs_exposed_ports "$port"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..."
 
-ynh_systemd_action --service_name="$squid_name" --action="restart" --log_path="/var/log/$squid_name/cache.log"
+ynh_systemd_action --service_name="squid" --action="restart" --log_path="/var/log/squid/cache.log"
 
 #=================================================
 # END OF SCRIPT

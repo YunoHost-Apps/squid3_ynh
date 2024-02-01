@@ -14,9 +14,9 @@ source /usr/share/yunohost/helpers
 # BACKUP VARIOUS FILES
 #=================================================
 
-ynh_backup --src_path="/etc/$squid_name/squid.conf"
+ynh_backup --src_path="/etc/squid/squid.conf"
 
-ynh_backup --src_path="/var/log/$squid_name"
+ynh_backup --src_path="/var/log/squid"
 
 #=================================================
 # END OF SCRIPT

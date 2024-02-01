@@ -15,17 +15,15 @@ source /usr/share/yunohost/helpers
 #=================================================
 ynh_script_progression --message="Adding a configuration file..."
 
-find_squid_version
-
-ynh_secure_remove --file="/etc/$squid_name/squid.conf"
-ynh_add_config --template="squid.conf" --destination="/etc/$squid_name/squid.conf"
+ynh_secure_remove --file="/etc/squid/squid.conf"
+ynh_add_config --template="squid.conf" --destination="/etc/squid/squid.conf"
 
 #=================================================
 # RESTORE SYSTEM CONFIGURATIONS
 #=================================================
 ynh_script_progression --message="Restoring system configurations related to $app..." --weight=1
 
-yunohost service add "$squid_name" --description "Squid3 a web proxy service" --log="/var/log/$squid_name/access.log" --needs_exposed_ports "$port"
+yunohost service add "squid" --description "Squid3 a web proxy service" --log="/var/log/squid/access.log" --needs_exposed_ports "$port"
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -33,7 +31,7 @@ yunohost service add "$squid_name" --description "Squid3 a web proxy service" --
 ynh_script_progression --message="Starting a systemd service..."
 
 # Start a systemd service
-ynh_systemd_action --service_name="$squid_name" --action="restart" --log_path="/var/log/$squid_name/cache.log"
+ynh_systemd_action --service_name="squid" --action="restart" --log_path="/var/log/squid/cache.log"
 
 #=================================================
 # END OF SCRIPT
