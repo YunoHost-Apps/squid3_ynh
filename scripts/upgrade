@@ -17,7 +17,11 @@ ynh_script_progression --message="Ensuring downward compatibility..."
 if [[ -n "${squid:-}" ]]; then
     squid_name="$squid"
     ynh_app_setting_set --app="$app" --key="squid_name" --value="$squid_name"
-    ynh_app_setting_delet --app="$app" --key="squid"
+    ynh_app_setting_delete --app="$app" --key="squid"
+fi
+
+if [[ -z "${squid_name:-}" ]]; then
+    find_squid_version
 fi
 
 #=================================================
