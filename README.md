@@ -9,7 +9,7 @@ It shall NOT be edited by hand.
 
 [![Install squid3 with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=squid3)
 
-*[Read this README is other languages.](./ALL_README.md)*
+*[Read this README in other languages.](./ALL_README.md)*
 
 > *This package allows you to install squid3 quickly and simply on a YunoHost server.*  
 > *If you don't have YunoHost, please consult [the guide](https://yunohost.org/install) to learn how to install it.*
@@ -25,7 +25,7 @@ Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more. It r
 Thanks to **Fred** to write the instruction to configure Squid for YunoHost. French: <https://memo-linux.com/installer-squid3-sur-un-serveur-yunohost/>
 
 
-**Shipped version:** 4.13~ynh1
+**Shipped version:** 4.13~ynh2
 ## Documentation and resources
 
 - Official app website: <http://www.squid-cache.org>

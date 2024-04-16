@@ -25,7 +25,7 @@ Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more. It r
 Thanks to **Fred** to write the instruction to configure Squid for YunoHost. French: <https://memo-linux.com/installer-squid3-sur-un-serveur-yunohost/>
 
 
-**Version incluse :** 4.13~ynh1
+**Version incluse :** 4.13~ynh2
 ## Documentations et ressources
 
 - Site officiel de l’app : <http://www.squid-cache.org>
