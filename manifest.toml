@@ -7,7 +7,7 @@ name = "squid3"
 description.en = "Caching proxy for the Web supporting HTTP, HTTPS, FTP and more."
 description.fr = "Proxy cache pour le web, compatible HTTP, HTTPS, FTP et plus encore."
 
-version = "4.13~ynh2"
+version = "4.13~ynh3"
 
 maintainers = ["Anmol Sharma"]
 
