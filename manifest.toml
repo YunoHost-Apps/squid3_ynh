@@ -7,7 +7,7 @@ name = "squid3"
 description.en = "Caching proxy for the Web supporting HTTP, HTTPS, FTP and more."
 description.fr = "Proxy cache pour le web, compatible HTTP, HTTPS, FTP et plus encore."
 
-version = "4.13~ynh2"
+version = "4.13~ynh3"
 
 maintainers = ["Anmol Sharma"]
 
@@ -40,4 +40,12 @@ ram.runtime = "50M"
     main.exposed = "TCP"
 
     [resources.apt]
-    packages = ["squid3", "mailutils"]
+    packages = ["mailutils"]
+
+    packages_from_raw_bash = """
+        if [[ $YNH_DEBIAN_VERSION == "bullseye" ]]; then
+            echo "squid3";
+        elif [[ $YNH_DEBIAN_VERSION == "bookworm" ]]; then
+            echo "squid";
+        fi
+        """

@@ -15,8 +15,8 @@ source /usr/share/yunohost/helpers
 ynh_script_progression --message="Removing system configurations related to $app..." --weight=1
 
 # Remove the service from the list of services known by YunoHost (added from `yunohost service add`)
-if ynh_exec_warn_less yunohost service status "$squid_name" >/dev/null; then
-    yunohost service remove "$squid_name"
+if ynh_exec_warn_less yunohost service status "squid" >/dev/null; then
+    yunohost service remove "squid"
 fi
 
 #=================================================
@@ -24,10 +24,10 @@ fi
 #=================================================
 
 # Remove a directory securely
-ynh_secure_remove --file="/etc/$squid_name/"
+ynh_secure_remove --file="/etc/squid/"
 
 # Remove the log files
-ynh_secure_remove --file="/var/log/$squid_name"
+ynh_secure_remove --file="/var/log/squid"
 
 #=================================================
 # END OF SCRIPT
