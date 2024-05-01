@@ -40,4 +40,12 @@ ram.runtime = "50M"
     main.exposed = "TCP"
 
     [resources.apt]
-    packages = ["squid3", "mailutils"]
+    packages = ["mailutils"]
+
+    packages_from_raw_bash = """
+        if [[ $YNH_DEBIAN_VERSION == "bullseye" ]]; then
+            echo "squid3";
+        elif [[ $YNH_DEBIAN_VERSION == "bookworm" ]]; then
+            echo "squid";
+        fi
+        """
