@@ -3,7 +3,7 @@
 请勿手动编辑。
 -->
 
-# YunoHost 的 squid3
+# YunoHost 上的 squid3
 
 [![集成程度](https://dash.yunohost.org/integration/squid3.svg)](https://dash.yunohost.org/appci/app/squid3) ![工作状态](https://ci-apps.yunohost.org/ci/badges/squid3.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/squid3.maintain.svg)
 
