@@ -27,7 +27,6 @@ fi
 ynh_secure_remove --file="/etc/squid/"
 
 # Remove the log files
-ynh_secure_remove --file="/var/log/squid"
 
 #=================================================
 # END OF SCRIPT
