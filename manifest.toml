@@ -7,7 +7,7 @@ name = "squid3"
 description.en = "Caching proxy for the Web supporting HTTP, HTTPS, FTP and more."
 description.fr = "Proxy cache pour le web, compatible HTTP, HTTPS, FTP et plus encore."
 
-version = "4.13~ynh3"
+version = "4.13~ynh4"
 
 maintainers = ["Anmol Sharma"]
 
@@ -20,8 +20,11 @@ cpe = "cpe:2.3:a:squid-cache:squid"
 yunohost = ">= 11.2"
 architectures = "all"
 multi_instance = false
+
 ldap = true
+
 sso = false
+
 disk = "50M"
 ram.build = "50M"
 ram.runtime = "50M"
