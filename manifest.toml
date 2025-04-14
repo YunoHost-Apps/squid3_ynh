@@ -14,6 +14,7 @@ maintainers = ["Anmol Sharma"]
 [upstream]
 license = "GPL-2.0-only"
 website = "http://www.squid-cache.org"
+code = "https://github.com/squid-cache/squid"
 cpe = "cpe:2.3:a:squid-cache:squid"
 
 [integration]
