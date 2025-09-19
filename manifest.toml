@@ -18,7 +18,7 @@ code = "https://github.com/squid-cache/squid"
 cpe = "cpe:2.3:a:squid-cache:squid"
 
 [integration]
-yunohost = ">= 11.2"
+yunohost = ">= 12.0"
 architectures = "all"
 multi_instance = false
 
@@ -44,12 +44,4 @@ ram.runtime = "50M"
     main.exposed = "TCP"
 
     [resources.apt]
-    packages = ["mailutils"]
-
-    packages_from_raw_bash = """
-        if [[ $YNH_DEBIAN_VERSION == "bullseye" ]]; then
-            echo "squid3";
-        elif [[ $YNH_DEBIAN_VERSION == "bookworm" ]]; then
-            echo "squid";
-        fi
-        """
+    packages = "squid, mailutils"
