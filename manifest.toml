@@ -44,4 +44,10 @@ ram.runtime = "50M"
     main.exposed = "TCP"
 
     [resources.apt]
-    packages = "squid, mailutils"
+    packages = "mailutils"
+
+    # FIXME: Weird, but if we put "squid" directly among the values of `packages` above
+    # The reinstallation of the app fail. We should understand why…
+    packages_from_raw_bash = """
+        echo "squid";
+        """
