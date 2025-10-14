@@ -1,4 +1,4 @@
-You can find a config file at `/etc/__SQUID_FOLDER__/squid.conf`.
+You can find a config file at `/etc/squid/squid.conf`.
 Squid 3 will work with your registered users through LDAP. Just put the username and password when asked.
 
 To configure on Firefox go to preferences->general->network proxy->manual proxy configuration.

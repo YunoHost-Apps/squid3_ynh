@@ -24,7 +24,7 @@ fi
 #=================================================
 
 # Remove a directory securely
-ynh_secure_remove --file="/etc/squid/"
+ynh_secure_remove --file="/etc/squid/squid.conf"
 
 #=================================================
 # END OF SCRIPT
