@@ -4,14 +4,14 @@ It shall NOT be edited by hand.
 -->
 
 <h1>
-  <img src="https://raw.githubusercontent.com/YunoHost/apps/master/logos/squid3.png" width="32px" alt="Logo of squid3">
+  <img src="https://raw.githubusercontent.com/YunoHost/apps/main/logos/squid3.png" width="32px" alt="Logo of squid3">
   squid3, packaged for YunoHost
 </h1>
 
 Caching proxy for the Web supporting HTTP, HTTPS, FTP and more.
 
 [![🌐 Official app website](https://img.shields.io/badge/Official_app_website-darkgreen?style=for-the-badge)](http://www.squid-cache.org)
-![Version: 4.13~ynh3](https://img.shields.io/badge/Version-4.13~ynh3-rgba(0,150,0,1)?style=for-the-badge)
+[![Version: 4.13~ynh4](https://img.shields.io/badge/Version-4.13~ynh4-rgb(18,138,11)?style=for-the-badge)](https://ci-apps.yunohost.org/ci/apps/squid3/)
 
 <div align="center">
 <a href="https://apps.yunohost.org/app/squid3"><img height="100px" src="https://github.com/YunoHost/yunohost-artwork/raw/refs/heads/main/badges/neopossum-badges/badge_more_info_on_the_appstore.svg"/></a>
@@ -22,7 +22,7 @@ Caching proxy for the Web supporting HTTP, HTTPS, FTP and more.
 
 [![Automatic tests level](https://apps.yunohost.org/badge/cilevel/squid3)](https://ci-apps.yunohost.org/ci/apps/squid3/)
 
-🛠️ Upstream squid3 repository: <>
+🛠️ Upstream squid3 repository: <https://github.com/squid-cache/squid>
 
 Pull request are welcome and should target the [`testing` branch](https://github.com/YunoHost-Apps/squid3_ynh/tree/testing).
 
