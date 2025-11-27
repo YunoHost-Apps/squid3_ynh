@@ -9,7 +9,7 @@ description.fr = "Proxy cache pour le web, compatible HTTP, HTTPS, FTP et plus e
 
 version = "4.13~ynh4"
 
-maintainers = ["Anmol Sharma"]
+maintainers = []
 
 [upstream]
 license = "GPL-2.0-only"
@@ -46,7 +46,7 @@ ram.runtime = "50M"
     [resources.apt]
     packages = "mailutils"
 
-    # FIXME: Weird, but if we put "squid" directly among the values of `packages` above
+    # Weird, but if we put "squid" directly among the values of `packages` above
     # The reinstallation of the app fail. We should understand why…
     packages_from_raw_bash = """
         echo "squid";
